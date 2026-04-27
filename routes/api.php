@@ -9,6 +9,7 @@ use App\Http\Controllers\Auth\MeController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Auth\ResetPasswordController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\WaitlistController;
 use Illuminate\Support\Facades\Route;
 
 // ── Auth publiques ────────────────────────────────
@@ -35,3 +36,6 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::put('/user', [UserController::class, 'update']);
     Route::put('/user/password', [UserController::class, 'updatePassword']);
 });
+
+// ── Waitlist ──────────────────────────────────────
+Route::post('/waitlist', [WaitlistController::class, 'store']);
