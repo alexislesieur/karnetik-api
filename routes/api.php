@@ -10,6 +10,7 @@ use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Auth\ResetPasswordController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\WaitlistController;
+use App\Http\Controllers\Admin\WaitlistController as AdminWaitlistController;
 use Illuminate\Support\Facades\Route;
 
 // ── Auth publiques ────────────────────────────────
@@ -39,3 +40,8 @@ Route::middleware('auth:sanctum')->group(function () {
 
 // ── Waitlist ──────────────────────────────────────
 Route::post('/waitlist', [WaitlistController::class, 'store']);
+
+// ── Admin ─────────────────────────────────────────
+Route::prefix('admin')->middleware(['auth:sanctum', \App\Http\Middleware\EnsureIsAdmin::class])->group(function () {
+    Route::get('/waitlist', [AdminWaitlistController::class, 'index']);
+});
