@@ -46,6 +46,11 @@ class Vehicle extends Model
         return $this->hasMany(Document::class);
     }
 
+    public function fuelLogs(): HasMany
+    {
+        return $this->hasMany(FuelLog::class);
+    }
+
     public function getDisplayNameAttribute(): string
     {
         return trim("{$this->brand} {$this->model} {$this->version}");
