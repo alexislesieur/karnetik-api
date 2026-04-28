@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\WaitlistConfirmation;
 use App\Models\Waitlist;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
 
 class WaitlistController extends Controller
 {
@@ -23,6 +25,8 @@ class WaitlistController extends Controller
         }
 
         Waitlist::create(['email' => $request->email]);
+
+        Mail::to($request->email)->send(new WaitlistConfirmation());
 
         return response()->json([
             'message' => 'Inscription confirmée.',
