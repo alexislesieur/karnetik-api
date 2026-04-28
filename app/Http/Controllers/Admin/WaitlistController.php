@@ -17,4 +17,23 @@ class WaitlistController extends Controller
             'entries' => $entries,
         ]);
     }
+
+    public function destroy(int $id): JsonResponse
+    {
+        $entry = Waitlist::findOrFail($id);
+        $entry->delete();
+
+        return response()->json([
+            'message' => 'Inscription supprimée.',
+        ]);
+    }
+
+    public function export(): JsonResponse
+    {
+        $entries = Waitlist::orderBy('created_at', 'desc')->get(['email', 'created_at']);
+
+        return response()->json([
+            'entries' => $entries,
+        ]);
+    }
 }

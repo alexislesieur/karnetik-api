@@ -44,4 +44,6 @@ Route::post('/waitlist', [WaitlistController::class, 'store']);
 // ── Admin ─────────────────────────────────────────
 Route::prefix('admin')->middleware(['auth:sanctum', \App\Http\Middleware\EnsureIsAdmin::class])->group(function () {
     Route::get('/waitlist', [AdminWaitlistController::class, 'index']);
+    Route::delete('/waitlist/{id}', [AdminWaitlistController::class, 'destroy']);
+    Route::get('/waitlist/export', [AdminWaitlistController::class, 'export']);
 });

@@ -1,35 +1,39 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Admin;
 
-use App\Mail\WaitlistConfirmation;
+use App\Http\Controllers\Controller;
 use App\Models\Waitlist;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Mail;
 
 class WaitlistController extends Controller
 {
-    public function store(Request $request): JsonResponse
+    public function index(): JsonResponse
     {
-        $request->validate([
-            'email' => ['required', 'string', 'email', 'max:255'],
-        ]);
-
-        $exists = Waitlist::where('email', $request->email)->exists();
-
-        if ($exists) {
-            return response()->json([
-                'message' => 'Vous êtes déjà sur la liste.',
-            ]);
-        }
-
-        Waitlist::create(['email' => $request->email]);
-
-        Mail::to($request->email)->send(new WaitlistConfirmation());
+        $entries = Waitlist::orderBy('created_at', 'desc')->get();
 
         return response()->json([
-            'message' => 'Inscription confirmée.',
-        ], 201);
+            'total'   => $entries->count(),
+            'entries' => $entries,
+        ]);
+    }
+
+    public function destroy(int $id): JsonResponse
+    {
+        $entry = Waitlist::findOrFail($id);
+        $entry->delete();
+
+        return response()->json([
+            'message' => 'Inscription supprimée.',
+        ]);
+    }
+
+    public function export(): JsonResponse
+    {
+        $entries = Waitlist::orderBy('created_at', 'desc')->get(['email', 'created_at']);
+
+        return response()->json([
+            'entries' => $entries,
+        ]);
     }
 }
